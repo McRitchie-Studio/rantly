@@ -1,29 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= content_for(:title) || "Rantly" %></title>
+    <title><%= content_for?(:title) ? "#{yield(:title)} · Rantly" : "Rantly · Let it all out" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Rantly: the social network with a 140-character minimum. Long-form rants, following and comments." %>">
+    <meta name="theme-color" content="#f5f1ea" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
     <meta name="application-name" content="Rantly">
-    <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
+    <meta property="og:site_name" content="Rantly">
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : "Rantly · Let it all out" %>">
+    <meta property="og:type" content="website">
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="masthead">
+      <div class="masthead__inner">
+        <%= link_to root_path, class: "wordmark", aria: { label: "Rantly home" } do %>
+          <span class="wordmark__mark" aria-hidden="true">R!</span>
+          <span class="wordmark__name">rantly</span>
+        <% end %>
+        <p class="masthead__tagline">Let it all out.</p>
+        <span class="badge badge--demo" title="Sample users and rants. Nothing you type is saved.">Demo</span>
+      </div>
+    </header>
+
+    <main id="main" class="page">
+      <%= yield %>
+    </main>
+
+    <footer class="colophon">
+      <p>
+        Rantly is a showcase rebuild of a 2014 app
+        (<a href="https://github.com/amcritchie/rantly">amcritchie/rantly</a>),
+        made with <a href="https://mcritchie.studio/build">McRitchie Studio</a>.
+      </p>
+      <p>Every user and rant here is fictional sample data. There are no accounts, and nothing you type is saved.</p>
+    </footer>
   </body>
 </html>

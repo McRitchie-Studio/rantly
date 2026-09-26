@@ -1,3 +1,6 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#d63c1f"/>
+  <g transform="rotate(-6 256 256)">
+    <text x="256" y="340" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-size="280" font-weight="900" letter-spacing="-16" fill="#ffffff">R!</text>
+  </g>
 </svg>

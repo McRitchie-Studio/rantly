@@ -33,7 +33,11 @@ module Rantly
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = "Mountain Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # A public, read-only site with no accounts and no forms has nothing to keep
+    # in a session, so it sets no cookie at all.
+    config.session_store :disabled
   end
 end

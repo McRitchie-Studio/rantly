@@ -1,0 +1,8 @@
+<%# locals: (user:, detail: nil) -%>
+<%= link_to user_path(user), class: "person" do %>
+  <%= avatar(user, size: :sm) %>
+  <span class="person__text">
+    <span class="person__name"><%= user.name %></span>
+    <span class="person__handle">@<%= user.handle %><% if detail %> · <%= detail %><% end %></span>
+  </span>
+<% end %>

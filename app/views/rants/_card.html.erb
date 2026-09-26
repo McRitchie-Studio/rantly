@@ -1,0 +1,35 @@
+<%# locals: (rant:, show_author: true) -%>
+<% author = rant.author %>
+<% comment_count = rant.comments.size %>
+<article class="card rant-card" id="rant-<%= rant.id %>" aria-labelledby="rant-<%= rant.id %>-title">
+  <% if show_author %>
+    <header class="byline">
+      <%= link_to user_path(author), class: "byline__who" do %>
+        <%= avatar(author) %>
+        <span class="byline__name"><%= author.name %></span>
+        <span class="byline__handle">@<%= author.handle %></span>
+      <% end %>
+      <span class="byline__dot" aria-hidden="true">·</span>
+      <%= posted_on(rant.posted_at) %>
+    </header>
+  <% else %>
+    <header class="byline"><%= posted_on(rant.posted_at) %></header>
+  <% end %>
+
+  <h2 class="rant-card__title" id="rant-<%= rant.id %>-title">
+    <%= link_to rant.title, rant_path(rant) %>
+  </h2>
+  <p class="rant-card__excerpt"><%= rant.excerpt %></p>
+
+  <footer class="rant-card__meta">
+    <%= link_to rant_path(rant, anchor: "comments"), class: "meta-link" do %>
+      <svg aria-hidden="true" viewBox="0 0 24 24" class="icon"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <%= count_label(comment_count, "comment") %>
+    <% end %>
+    <span><%= rant.reading_minutes %> min read</span>
+    <span class="tweets" title="How many 140-character tweets it would take to say this"><%= rant.tweets_worth %> tweets' worth</span>
+    <% if rant.truncated? %>
+      <%= link_to rant_path(rant), class: "read-more" do %>Read the whole rant<span class="visually-hidden">: <%= rant.title %></span> <span aria-hidden="true">→</span><% end %>
+    <% end %>
+  </footer>
+</article>
