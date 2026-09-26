@@ -1,0 +1,20 @@
+<%# The demo composer. It is not a form and it posts nothing: Rantly's
+    showcase has no accounts. The script (composer.js) counts toward the
+    140-character floor and explains itself when the button is pressed. -%>
+<section class="card composer" aria-labelledby="composer-title" data-composer data-min="<%= SampleData::MIN_RANT_LENGTH %>">
+  <div class="composer__head">
+    <h2 id="composer-title" class="composer__title">What's got you worked up?</h2>
+    <span class="badge badge--demo">Demo · not saved</span>
+  </div>
+  <label class="visually-hidden" for="composer-body">Your rant</label>
+  <textarea id="composer-body" class="composer__input" rows="3" data-composer-input
+    aria-describedby="composer-count composer-note"
+    placeholder="Rants start at 140 characters. Take your time."></textarea>
+  <div class="composer__foot">
+    <p id="composer-count" class="composer__count" data-composer-count aria-live="polite">140 characters to go</p>
+    <button type="button" class="button" data-composer-submit disabled>Rant</button>
+  </div>
+  <p id="composer-note" class="composer__note" data-composer-note>
+    This is a demo: there are no accounts, and nothing you type leaves your browser.
+  </p>
+</section>

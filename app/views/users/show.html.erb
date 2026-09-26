@@ -1,0 +1,56 @@
+<% content_for :title, "#{@user.name} (@#{@user.handle})" %>
+<% content_for :description, @user.bio %>
+<div class="layout">
+  <div class="layout__main">
+    <p class="crumb"><%= link_to "← Back to the feed", root_path %></p>
+
+    <section class="card profile" aria-labelledby="profile-name">
+      <div class="profile__banner" style="--hue: <%= @user.hue %>" aria-hidden="true"></div>
+      <div class="profile__body">
+        <%= avatar(@user, size: :xl) %>
+        <h1 class="profile__name" id="profile-name"><%= @user.name %></h1>
+        <p class="profile__handle">@<%= @user.handle %></p>
+        <p class="profile__bio"><%= @user.bio %></p>
+        <dl class="profile__facts">
+          <div><dt>Rants</dt><dd><%= @user.rant_frequency %></dd></div>
+          <div><dt>From</dt><dd><%= @user.location %></dd></div>
+          <div><dt>Joined</dt><dd><%= @user.joined_on.strftime("%B %Y") %></dd></div>
+        </dl>
+        <ul class="profile__stats">
+          <li><a href="#rants"><strong><%= @rants.size %></strong> <%= @rants.size == 1 ? "rant" : "rants" %></a></li>
+          <li><a href="#following"><strong><%= @following.size %></strong> following</a></li>
+          <li><a href="#followers"><strong><%= @followers.size %></strong> <%= @followers.size == 1 ? "follower" : "followers" %></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <h2 class="section-heading" id="rants">Rants by @<%= @user.handle %></h2>
+    <div class="feed">
+      <% if @rants.any? %>
+        <%= render partial: "rants/card", collection: @rants, as: :rant, locals: { show_author: false } %>
+      <% else %>
+        <p class="card empty">@<%= @user.handle %> has not ranted yet. Give it time.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <aside class="layout__aside" aria-label="Connections">
+    <section class="card" id="following" aria-labelledby="following-title">
+      <h2 class="aside-title" id="following-title">Following · <%= @following.size %></h2>
+      <% if @following.any? %>
+        <ul class="people"><% @following.each do |user| %><li><%= render "users/row", user: user %></li><% end %></ul>
+      <% else %>
+        <p class="empty">Not following anyone yet.</p>
+      <% end %>
+    </section>
+
+    <section class="card" id="followers" aria-labelledby="followers-title">
+      <h2 class="aside-title" id="followers-title">Followers · <%= @followers.size %></h2>
+      <% if @followers.any? %>
+        <ul class="people"><% @followers.each do |user| %><li><%= render "users/row", user: user %></li><% end %></ul>
+      <% else %>
+        <p class="empty">No followers yet.</p>
+      <% end %>
+    </section>
+  </aside>
+</div>

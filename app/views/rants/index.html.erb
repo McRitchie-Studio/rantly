@@ -1,0 +1,33 @@
+<% content_for :title, "Home" %>
+<div class="layout">
+  <div class="layout__main">
+    <h1 class="visually-hidden">Rants</h1>
+    <%= render "shared/composer" %>
+
+    <nav class="tabs" aria-label="Sort the feed">
+      <%= link_to "Latest", root_path, class: "tabs__tab", aria: { current: (@sort == "latest" ? "page" : nil) } %>
+      <%= link_to "Most discussed", root_path(sort: "discussed"), class: "tabs__tab", aria: { current: (@sort == "discussed" ? "page" : nil) } %>
+    </nav>
+
+    <div class="feed" data-feed>
+      <%= render partial: "rants/card", collection: @rants, as: :rant %>
+    </div>
+  </div>
+
+  <aside class="layout__aside" aria-label="About Rantly">
+    <section class="card about">
+      <h2 class="aside-title">The opposite of Twitter</h2>
+      <p>In 2014 Twitter gave you 140 characters. Rantly gave you 140 characters <em>minimum</em>.</p>
+      <p>Twelve years on, the floor has not moved. Say the whole thing.</p>
+    </section>
+
+    <section class="card" aria-labelledby="loudest-title">
+      <h2 class="aside-title" id="loudest-title">Loudest ranters</h2>
+      <ol class="people">
+        <% @loudest.each do |user| %>
+          <li><%= render "users/row", user: user, detail: count_label(user.followers.size, "follower") %></li>
+        <% end %>
+      </ol>
+    </section>
+  </aside>
+</div>
