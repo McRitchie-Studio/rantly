@@ -1,0 +1,80 @@
+<% content_for :title, @rant.title %>
+<% content_for :description, @rant.excerpt(155) %>
+<div class="layout">
+  <div class="layout__main">
+    <p class="crumb"><%= link_to "← Back to the feed", root_path %></p>
+
+    <article class="card rant" aria-labelledby="rant-title">
+      <header class="byline byline--large">
+        <%= link_to user_path(@author), class: "byline__who" do %>
+          <%= avatar(@author, size: :lg) %>
+          <span class="byline__stack">
+            <span class="byline__name"><%= @author.name %></span>
+            <span class="byline__handle">@<%= @author.handle %></span>
+          </span>
+        <% end %>
+      </header>
+
+      <h1 class="rant__title" id="rant-title"><%= @rant.title %></h1>
+      <p class="rant__meta">
+        <%= posted_on(@rant.posted_at) %>
+        <span aria-hidden="true">·</span> <%= @rant.reading_minutes %> min read
+        <span aria-hidden="true">·</span> <%= number_with_delimiter(@rant.body.length) %> characters, or <%= @rant.tweets_worth %> tweets' worth
+      </p>
+
+      <div class="rant__body">
+        <%= rant_paragraphs(@rant) %>
+      </div>
+    </article>
+
+    <section class="card comments" id="comments" aria-labelledby="comments-title">
+      <h2 class="section-title" id="comments-title"><%= count_label(@comments.size, "comment") %></h2>
+      <% if @comments.any? %>
+        <ol class="comment-list">
+          <% @comments.each do |comment| %>
+            <% commenter = comment.author %>
+            <li class="comment">
+              <%= link_to user_path(commenter), class: "comment__avatar", tabindex: -1, aria: { hidden: true } do %><%= avatar(commenter, size: :sm) %><% end %>
+              <div class="comment__main">
+                <p class="comment__byline">
+                  <%= link_to commenter.name, user_path(commenter), class: "comment__name" %>
+                  <span class="byline__handle">@<%= commenter.handle %></span>
+                  <span aria-hidden="true">·</span>
+                  <%= posted_on(comment.posted_at) %>
+                </p>
+                <p class="comment__body"><%= comment.body %></p>
+              </div>
+            </li>
+          <% end %>
+        </ol>
+      <% else %>
+        <p class="empty">No comments yet. Somebody has to rant back first.</p>
+      <% end %>
+      <p class="comments__note">Commenting is switched off in this demo: there are no accounts.</p>
+    </section>
+  </div>
+
+  <aside class="layout__aside" aria-label="About the author">
+    <section class="card author-card">
+      <%= render "users/row", user: @author %>
+      <p class="author-card__bio"><%= @author.bio %></p>
+      <p class="author-card__stats">
+        <%= count_label(@author.rants.size, "rant") %> · <%= count_label(@author.followers.size, "follower") %>
+      </p>
+    </section>
+
+    <% if @more_from_author.any? %>
+      <section class="card" aria-labelledby="more-title">
+        <h2 class="aside-title" id="more-title">More from @<%= @author.handle %></h2>
+        <ul class="more-list">
+          <% @more_from_author.each do |rant| %>
+            <li>
+              <%= link_to rant.title, rant_path(rant) %>
+              <span class="more-list__meta"><%= posted_on(rant.posted_at) %> · <%= count_label(rant.comments.size, "comment") %></span>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  </aside>
+</div>
