@@ -6,4 +6,8 @@ Rails.application.routes.draw do
   root "rants#index"
   resources :rants, only: :show
   get "@:handle", to: "users#show", as: :user, constraints: { handle: /[a-z0-9_]+/ }
+
+  # The legal pages the site footer links (config/initializers/studio.rb).
+  get "privacy", to: "legal#privacy", as: :privacy
+  get "terms", to: "legal#terms", as: :terms
 end

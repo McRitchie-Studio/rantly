@@ -20,6 +20,22 @@
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   color-scheme: light dark;
+
+  /* The studio-engine theme tokens, as Rantly's own colours. Only the engine's
+     site footer reads them (studio_site_footer; its inline CSS falls back to a
+     violet primary and a transparent band without them). The -rgb triplet is
+     --accent's, spelled out, because the footer composes it as rgb(... / a). */
+  --color-primary: var(--accent);
+  --color-primary-500-rgb: 214 60 31;
+  --color-text: var(--ink);
+  /* --ink, not --ink-2: the engine dims footer links to .78 opacity, and --ink-2
+     at .78 on --surface-2 is 3.99:1, under the 4.5:1 a link needs. */
+  --color-text-body: var(--ink);
+  --color-text-secondary: var(--ink-2);
+  --color-text-muted: var(--ink-3);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-2);
+  --color-border: var(--line);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +52,7 @@
     --accent-soft: #3a1d14;
     --ready: #5fd38f;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+    --color-primary-500-rgb: 255 106 77;
   }
 }
 
@@ -238,6 +255,16 @@ p { margin: 0; }
 .profile__stats strong { color: var(--ink); }
 .profile__stats a:hover strong { color: var(--accent); }
 
+/* Legal pages (/privacy, /terms) */
+.legal { max-width: 46rem; margin: 0 auto; padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+.legal__title { font-size: clamp(28px, 5vw, 36px); letter-spacing: -0.03em; }
+.legal__updated { color: var(--ink-3); font-size: 14px; margin-top: 6px; }
+.legal section { display: flex; flex-direction: column; gap: 10px; }
+.legal h2 { font-size: 19px; letter-spacing: -0.01em; }
+.legal p { color: var(--ink-2); font-size: 16px; line-height: 1.65; }
+.legal strong { color: var(--ink); }
+.legal a { color: var(--accent); }
+
 /* Footer */
 .colophon { max-width: 1040px; margin: 0 auto; padding: 24px 16px 40px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
 .colophon p + p { margin-top: 4px; }
@@ -245,6 +272,7 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .masthead__tagline { display: none; }
   .rant { padding: 20px; }
+  .legal { padding: 20px; }
   .rant__body { font-size: 18px; }
   .rant-card__title { font-size: 20px; }
   .read-more { margin-left: 0; }
