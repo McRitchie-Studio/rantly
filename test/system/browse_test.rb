@@ -56,7 +56,8 @@ class BrowseTest < ApplicationSystemTestCase
 
   test "Most discussed puts the busiest rant on top" do
     visit root_path
-    click_on "Most discussed"
+    # The tab, not the site footer's link of the same name and destination.
+    within(".tabs") { click_on "Most discussed" }
     assert_selector ".tabs a[aria-current=page]", text: "Most discussed"
     assert_equal "Reply-all is not a personality", first("h2.rant-card__title").text
   end

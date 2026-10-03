@@ -34,4 +34,26 @@ class ProductionSslTest < ActiveSupport::TestCase
     assert_equal 200, response["status"]
     assert_nil response["set_cookie"], "the public page should set no cookie"
   end
+
+  # studio-engine is in the bundle as a view library only
+  # (config/initializers/studio.rb). Production eager-loads, which is where the
+  # engine's ActiveRecord models and auth-bound controllers would break the boot
+  # if they were not kept out of eager loading.
+  test "production eager-loads with studio-engine and renders the site footer" do
+    assert_equal true, self.class.results["eager_loaded"]
+    assert self.class.results["https /"]["footer"], "the feed should end with the engine's site footer"
+  end
+
+  test "the legal pages serve in production, with the footer and no cookie" do
+    %w[/privacy /terms].each do |path|
+      response = self.class.results["https #{path}"]
+      assert_equal 200, response["status"], path
+      assert response["footer"], "#{path} should carry the site footer"
+      assert_nil response["set_cookie"], "#{path} should set no cookie"
+    end
+  end
+
+  test "the engine draws no routes: there is no sign-in page" do
+    assert_equal 404, self.class.results["https /login"]["status"]
+  end
 end
