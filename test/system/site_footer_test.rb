@@ -41,6 +41,23 @@ class SiteFooterSystemTest < ApplicationSystemTestCase
     assert_equal accent, wordmark
   end
 
+  test "a footer link clears 4.5:1 against the footer band at the opacity the engine gives it" do
+    # Each scheme is forced: headless Chrome otherwise follows the machine it runs on.
+    scheme = ->(value) { page.driver.browser.execute_cdp("Emulation.setEmulatedMedia", features: [ { name: "prefers-color-scheme", value: value } ]) }
+    ratios = %w[light dark].to_h { |value| scheme.(value); visit root_path; [ value, page.evaluate_script(<<~JS) ] }
+      (() => { const rgb = (c) => c.match(/[0-9.]+/g).slice(0, 3).map(Number);
+               const a = document.querySelector("footer[data-site-footer] nav a.ftr-link"), s = getComputedStyle(a);
+               const bg = rgb(getComputedStyle(a.closest("footer")).backgroundColor), o = Number(s.opacity);
+               const lum = (c) => { const [r, g, b] = c.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+                                    return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+               const [hi, lo] = [ lum(rgb(s.color).map((v, i) => v * o + bg[i] * (1 - o))), lum(bg) ].sort((x, y) => y - x);
+               return (hi + 0.05) / (lo + 0.05); })()
+    JS
+    ratios.each { |value, ratio| assert_operator ratio, :>=, 4.5, "footer links are #{ratio.round(2)}:1 on the #{value} footer band" }
+  ensure
+    scheme.("")
+  end
+
   test "the footer's legal links reach both pages" do
     visit root_path
     within "footer[data-site-footer] nav[aria-label=Legal]" do

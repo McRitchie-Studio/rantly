@@ -28,7 +28,9 @@
   --color-primary: var(--accent);
   --color-primary-500-rgb: 214 60 31;
   --color-text: var(--ink);
-  --color-text-body: var(--ink-2);
+  /* --ink, not --ink-2: the engine dims footer links to .78 opacity, and --ink-2
+     at .78 on --surface-2 is 3.99:1, under the 4.5:1 a link needs. */
+  --color-text-body: var(--ink);
   --color-text-secondary: var(--ink-2);
   --color-text-muted: var(--ink-3);
   --color-surface: var(--surface);
