@@ -1,1 +1,58 @@
-<p>terms</p>
+<%# /terms: the Terms of Service. Rantly is a showcase with no accounts and no
+    user posts, so these terms cover reading a demonstration, not publishing on
+    a network. They change the day Rantly saves anything a visitor writes. -%>
+<% content_for(:title, "Terms of Service") %>
+<% content_for(:description, "The terms for using Rantly, McRitchie Studio's showcase social network.") %>
+
+<article class="card legal" data-legal-page="terms" aria-labelledby="legal-title">
+  <header class="legal__head">
+    <h1 id="legal-title" class="legal__title">Terms of Service</h1>
+    <p class="legal__updated">Last updated: October 3, 2026</p>
+  </header>
+
+  <section>
+    <h2>1. The Service</h2>
+    <p>Rantly, at <a href="https://rantly.mcritchie.studio">rantly.mcritchie.studio</a> (the "Service"), is operated by McRitchie Studio LLC, doing business as McRitchie Studio ("McRitchie Studio", "we", "us"). By using the Service you agree to these Terms. If you do not agree, please do not use it.</p>
+  </section>
+
+  <section>
+    <h2>2. A Showcase, Not a Network</h2>
+    <p>Rantly is a demonstration of a social network with a 140-character minimum, rebuilt from a 2014 app. Every user, profile, rant, comment and follow on it is fictional sample data that we wrote. Any resemblance to a real person is unintended.</p>
+    <p>There are no accounts. The rant box is a demonstration that runs in your browser: nothing you type in it is posted, saved or sent to us, and nobody else can see it. Commenting is switched off.</p>
+  </section>
+
+  <section>
+    <h2>3. Using the Service</h2>
+    <p>You may read the Service and share links to it. You agree not to interfere with it, overload it, probe it for weaknesses or try to reach parts of it that are not offered to you, and not to use it for anything unlawful.</p>
+  </section>
+
+  <section>
+    <h2>4. Links to Other Sites</h2>
+    <p>The Service links to sites we do not run, such as GitHub. We are not responsible for their content or their practices, and their own terms apply when you visit them.</p>
+  </section>
+
+  <section>
+    <h2>5. Ownership</h2>
+    <p>The Service, including its text, sample content, design and logo, belongs to McRitchie Studio or to those who license it to us. You may not copy or republish it without our written permission, except as the law allows.</p>
+  </section>
+
+  <section>
+    <h2>6. Disclaimer of Warranties</h2>
+    <p>The Service is provided "as is" and "as available", without warranties of any kind, express or implied. We do not warrant that it will be uninterrupted or free of errors.</p>
+  </section>
+
+  <section>
+    <h2>7. Limitation of Liability</h2>
+    <p>To the fullest extent the law permits, McRitchie Studio will not be liable for any indirect, incidental, consequential, special or punitive damages, or for lost profits or lost data, arising from your use of the Service.</p>
+  </section>
+
+  <section>
+    <h2>8. Changes</h2>
+    <p>We may change or withdraw any part of the Service, or update these Terms, at any time. The "Last updated" date at the top shows when the Terms were last revised. If you keep using the Service after a change, you accept the revised Terms.</p>
+  </section>
+
+  <section>
+    <h2>9. Contact</h2>
+    <p>Questions about these Terms? Email <a href="mailto:team@mcritchie.studio">team@mcritchie.studio</a>. How we handle information is in the <%= link_to "Privacy Policy", privacy_path %>.</p>
+  </section>
+</article>

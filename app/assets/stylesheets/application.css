@@ -253,6 +253,16 @@ p { margin: 0; }
 .profile__stats strong { color: var(--ink); }
 .profile__stats a:hover strong { color: var(--accent); }
 
+/* Legal pages (/privacy, /terms) */
+.legal { max-width: 46rem; margin: 0 auto; padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+.legal__title { font-size: clamp(28px, 5vw, 36px); letter-spacing: -0.03em; }
+.legal__updated { color: var(--ink-3); font-size: 14px; margin-top: 6px; }
+.legal section { display: flex; flex-direction: column; gap: 10px; }
+.legal h2 { font-size: 19px; letter-spacing: -0.01em; }
+.legal p { color: var(--ink-2); font-size: 16px; line-height: 1.65; }
+.legal strong { color: var(--ink); }
+.legal a { color: var(--accent); }
+
 /* Footer */
 .colophon { max-width: 1040px; margin: 0 auto; padding: 24px 16px 40px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
 .colophon p + p { margin-top: 4px; }
@@ -260,6 +270,7 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .masthead__tagline { display: none; }
   .rant { padding: 20px; }
+  .legal { padding: 20px; }
   .rant__body { font-size: 18px; }
   .rant-card__title { font-size: 20px; }
   .read-more { margin-left: 0; }
