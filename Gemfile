@@ -11,6 +11,10 @@ gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
+# Shared McRitchie Studio engine, taken as a view library for the site footer
+# only (config/initializers/studio.rb).
+gem "studio-engine", "~> 0.84"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
