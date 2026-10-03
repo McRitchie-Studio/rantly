@@ -60,15 +60,16 @@ and the layout calls `studio_site_footer`. The engine's own contract is its
 
 Rantly takes none of the rest of the engine, because all of it (sign-in, admin
 pages, error logs, theme settings) is ActiveRecord and Rantly has no database.
-What that takes, each line commented where it lives:
+The engine handles that itself from 0.86 (`Studio.active_record?`): it keeps
+its ActiveRecord-bound code out of eager loading, skips its check of the
+host's `User`, and makes `bin/rails studio_engine:install:migrations` a no-op
+that exits 0, which the hub's release sweep runs after every engine publish.
+The `Gemfile` floors the engine at `~> 0.86` for that reason. What is left to
+Rantly:
 
 | Where | What | Why |
 |-------|------|-----|
 | `config/routes.rb` | No `Studio.routes(self)` | The engine draws no routes: no `/login`, `/admin`, `/_studio/*` |
-| `config/initializers/studio.rb` | The engine's `app/controllers`, `models`, `mailers`, `jobs` and `services` are kept out of eager loading | They subclass ActiveRecord, ActionMailer and ActiveJob and skip an auth callback Rantly does not have, so production's eager load would die on them. No route reaches them |
-| `config/initializers/studio.rb` | `Studio.validate_user_contract = false` | Rantly's `User` is a fictional sample profile, not an account |
-| `config/application.rb` | `require "active_support/core_ext/integer/time"` | The engine calls `Integer#minutes` while it loads, before Rails has loaded that extension in an app without ActiveRecord |
-| `Rakefile` | `studio_engine:install:migrations` is a no-op | Rails' version dies with no ActiveRecord, and the hub's release sweep runs it after every engine publish and aborts on a failure |
 | `app/assets/stylesheets/application.css` | `--color-*` tokens mapped to Rantly's palette | The footer reads the engine's theme tokens; without them it falls back to violet |
 
 ## Legal pages
