@@ -12,12 +12,16 @@ Rails.application.load_tasks
 # (mcritchie-studio bin/release.rb, install_engine_migrations!), and aborts the
 # release on a non-zero exit. Rantly has no database and installs none of the
 # engine's migrations, so the task is replaced with one that says so and exits 0.
-Rake::Task["studio_engine:install:migrations"].clear if Rake::Task.task_defined?("studio_engine:install:migrations")
-namespace :studio_engine do
-  namespace :install do
-    desc "No-op: Rantly has no database, so it installs none of studio-engine's migrations"
-    task :migrations do
-      puts "rantly: no database, so no studio-engine migrations to install"
+# Only while the app has no ActiveRecord: the day it gains a database, Rails' own
+# installer works and this override must not swallow the engine's migrations.
+unless defined?(ActiveRecord::Railtie)
+  Rake::Task["studio_engine:install:migrations"].clear if Rake::Task.task_defined?("studio_engine:install:migrations")
+  namespace :studio_engine do
+    namespace :install do
+      desc "No-op: Rantly has no database, so it installs none of studio-engine's migrations"
+      task :migrations do
+        puts "rantly: no database, so no studio-engine migrations to install"
+      end
     end
   end
 end
