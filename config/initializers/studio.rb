@@ -7,35 +7,18 @@
 # engine's app/helpers/studio/site_footer_helper.rb), its partials and its
 # scoped inline CSS. The engine's docs/SITE_FOOTER.md is the contract.
 #
-# Three things the engine would otherwise force, and how each is declined:
-#
-# 1. ROUTES. config/routes.rb does NOT call Studio.routes(self), so the engine
-#    draws nothing: no /login, /signup, /admin, /error_logs, /_studio/*.
-#
-# 2. EAGER LOADING. In production (and in CI, where config/environments/test.rb
-#    turns eager_load on) Rails eager-loads the engine's app/ directories. Its
-#    models subclass ApplicationRecord, its controllers skip
-#    :require_authentication, its jobs subclass ActiveJob and its mailers
-#    ActionMailer, none of which exist here, so the boot dies on the first one.
-#    No route reaches any of them, so they are kept out of eager loading; they
-#    stay lazily loadable and nothing ever asks for them. The engine's helpers
-#    are left in, because the footer helper lives there.
-#
-# 3. THE USER CONTRACT. The engine checks the host's ::User against its
-#    contract (find_by, admin?, display_name) after boot. Rantly's User is a
-#    fictional sample profile (app/models/user.rb, a plain Data class read from
-#    data/sample.yml), not an account, so the check is switched off.
+# The engine handles an app with no database itself (studio-engine >= 0.86,
+# Studio.active_record?; its docs/SITE_FOOTER.md, "An app with no database"):
+# it keeps its ActiveRecord-bound code out of eager loading, skips its check
+# of the host's ::User (Rantly's is a fictional sample profile,
+# app/models/user.rb, not an account) and makes
+# `studio_engine:install:migrations` a no-op. The Gemfile floor is what holds
+# that. The one thing left to this app is ROUTES: config/routes.rb does NOT
+# call Studio.routes(self), so the engine draws nothing: no /login, /signup,
+# /admin, /error_logs, /_studio/*.
 #
 # Taking more of the engine (sign-in, admin, error logs) means taking a
 # database first; that is a separate decision, not this file's.
-Studio.validate_user_contract = false
-
-engine_app = Studio::Engine.root.join("app")
-%w[controllers models mailers jobs services].each do |dir|
-  path = engine_app.join(dir)
-  Rails.autoloaders.main.do_not_eager_load(path.to_s) if path.directory?
-end
-
 Studio.configure do |config|
   # The footer's facts (docs/SITE_FOOTER.md, "The facts"). Like Turf Monster's:
   # a wordmark and logo, a tagline, link columns and a legal line. No address,
