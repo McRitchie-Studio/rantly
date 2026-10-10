@@ -14,7 +14,7 @@ gem "importmap-rails"
 # Shared McRitchie Studio engine, taken as a view library for the site footer
 # only (config/initializers/studio.rb). From 0.86 it boots in an app with
 # no ActiveRecord without help from the app.
-gem "studio-engine", "~> 0.86"
+gem "studio-engine", "~> 0.94"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
