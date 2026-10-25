@@ -6,7 +6,7 @@
 
     <nav class="tabs" aria-label="Sort the feed">
       <%= link_to "Latest", root_path, class: "tabs__tab", aria: { current: (@sort == "latest" ? "page" : nil) } %>
-      <%= link_to "Most discussed", root_path(sort: "discussed"), class: "tabs__tab", aria: { current: (@sort == "discussed" ? "page" : nil) } %>
+      <%= link_to "Most discussed", discussed_path, class: "tabs__tab", aria: { current: (@sort == "discussed" ? "page" : nil) } %>
     </nav>
 
     <div class="feed" data-feed>

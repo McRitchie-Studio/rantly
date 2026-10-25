@@ -120,3 +120,21 @@ cookie.
 Branches follow the McRitchie three-rung ladder: feature PRs target `accepted`,
 the release promotes `accepted` to `release`, and production ships `release` to
 `main`. CI runs on every pull request and on pushes to all three.
+
+### The static build (Cloudflare)
+
+Rantly has no database and only GET routes, so it can be served as plain files.
+`bin/static-build` precompiles the digested assets in production mode, renders
+every page into `tmp/static/site` (`bin/rails static:build`, `lib/static_site.rb`)
+and writes `tmp/static/site.manifest.json` beside it. It renders through the real
+Rack app and crawls every internal link, so the bundle is what the dynamic app
+serves; a link with a query string, or to a path that does not answer 200, stops
+the build. Pages are written as `<path>/index.html`. Production still deploys to
+Heroku today; once the hub's cutover procedure has run (`bin/static-downgrade
+rantly --execute`, hub `docs/agents/modules/static-cloudflare.md`), the hub's
+`static_cloudflare` release strategy uploads the directory to R2 and serves it at
+`rantly.mcritchie.studio`.
+
+`OUT=` and `HOST=` override the directory and the host the pages are built for.
+The feed's "Most discussed" tab is `/discussed`, not `/?sort=discussed`, because
+a static host ignores the query string.

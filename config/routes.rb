@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "rants#index"
+  # The sorted feed has a path of its own, not just ?sort=discussed, because a
+  # static host (lib/static_site.rb) ignores the query string.
+  get "discussed", to: "rants#index", defaults: { sort: "discussed" }, as: :discussed
   resources :rants, only: :show
   get "@:handle", to: "users#show", as: :user, constraints: { handle: /[a-z0-9_]+/ }
 

@@ -39,6 +39,18 @@ class RantsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".tabs a[aria-current=page]", "Most discussed"
   end
 
+  # A static host ignores a query string, so the sorted feed has a path of its
+  # own (lib/static_site.rb renders it to discussed/index.html).
+  test "/discussed serves the most discussed feed, and the tabs link paths, not queries" do
+    get discussed_path
+    assert_response :success
+    titles = css_select("[data-feed] .rant-card__title a").map { |a| a.text.strip }
+    assert_equal Rant.feed("discussed").map(&:title), titles
+    assert_select ".tabs a[aria-current=page][href=?]", "/discussed", "Most discussed"
+    assert_select ".tabs a[href=?]", "/", "Latest"
+    assert_no_match(/href="[^"]*\?sort=/, response.body)
+  end
+
   test "an unknown sort shows the latest feed" do
     get root_path(sort: "<script>")
     assert_response :success
