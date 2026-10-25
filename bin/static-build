@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# bin/static-build — the static site the hub's release ship uploads to Cloudflare
+# (hub docs/agents/modules/static-cloudflare.md). Builds the digested assets in
+# production mode, renders every page into OUT (default tmp/static/site), then
+# removes public/assets again so the checkout is left as it was found.
+#
+#   bin/static-build                       # -> tmp/static/site
+#   OUT=/tmp/x HOST=rantly.mcritchie.studio bin/static-build
+set -eu
+cd "$(dirname "$0")/.."
+
+export RAILS_ENV=production
+export SECRET_KEY_BASE_DUMMY=1
+export RAILS_LOG_LEVEL="${RAILS_LOG_LEVEL:-warn}"
+
+trap 'bin/rails assets:clobber >/dev/null 2>&1 || true' EXIT
+bin/rails assets:precompile >/dev/null
+bin/rails static:build
