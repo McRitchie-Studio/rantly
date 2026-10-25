@@ -39,7 +39,7 @@ Studio.configure do |config|
       columns: [
         [ "Contact", [ [ "team@mcritchie.studio", "mailto:team@mcritchie.studio" ] ] ],
         [ "Rantly", [ [ "Latest rants", view.root_path ],
-                      [ "Most discussed", view.root_path(sort: "discussed") ] ] ],
+                      [ "Most discussed", view.discussed_path ] ] ],
         [ "About", [ [ "The 2014 original", "https://github.com/amcritchie/rantly" ],
                      [ "Made with McRitchie Studio", "https://mcritchie.studio/build" ] ] ],
         [ "Legal", [ [ "Privacy Policy", view.privacy_path ],

@@ -3,7 +3,7 @@ require "test_helper"
 # Component tier: the studio-engine site footer as Rantly renders it
 # (config/initializers/studio.rb declares the facts; the engine draws them).
 class SiteFooterTest < ActionDispatch::IntegrationTest
-  PAGES = [ "/", "/?sort=discussed", "/rants/we-said-140-and-we-meant-it", "/@rantly", "/privacy", "/terms" ].freeze
+  PAGES = [ "/", "/discussed", "/?sort=discussed", "/rants/we-said-140-and-we-meant-it", "/@rantly", "/privacy", "/terms" ].freeze
 
   test "every page ends with exactly one site footer, after Rantly's own colophon" do
     PAGES.each do |path|
@@ -34,7 +34,7 @@ class SiteFooterTest < ActionDispatch::IntegrationTest
     assert_select "footer[data-site-footer] nav[aria-label=Contact] a[href=?]", "mailto:team@mcritchie.studio", "team@mcritchie.studio"
     assert_select "footer[data-site-footer] nav[aria-label=Rantly]" do
       assert_select "a[href=?]", "/", "Latest rants"
-      assert_select "a[href=?]", "/?sort=discussed", "Most discussed"
+      assert_select "a[href=?]", "/discussed", "Most discussed"
     end
     assert_select "footer[data-site-footer] nav[aria-label=About]" do
       assert_select "a[href=?][target=_blank]", "https://github.com/amcritchie/rantly", "The 2014 original"
