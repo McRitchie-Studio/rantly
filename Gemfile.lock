@@ -329,7 +329,7 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    studio-engine (0.114.3)
+    studio-engine (0.115.0)
       aws-sdk-s3 (~> 1.218)
       csv (>= 3.0)
       faker (>= 2.0, < 4.0)
@@ -522,7 +522,7 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-webdriver (4.49.0) sha256=b430f091a3cababb356b6f6132e0e4f385b017819355f563557e1537819edc89
   solid_queue (1.7.0) sha256=6566b70b801d1c317c81bba7bcdd5677c019afac584a30374b4164002ca356d3
-  studio-engine (0.114.3) sha256=29d0ba1f54fe4db872c5a50a1d68d7954f441681f821bc1e430c3872d6602c64
+  studio-engine (0.115.0) sha256=0099217f9015c3eb458cdb4c092b6b44b11fbf3d781238d9282ad744bd1d60d4
   tailwindcss-rails (4.6.0) sha256=d99512867173d55c5ef8890427682299d8539f550cec1408b3d8667a538bd365
   tailwindcss-ruby (4.3.3) sha256=ee0a64030749862deb501acab4c4aaf5adbee13865746a33299d46d7b5d0952a
   tailwindcss-ruby (4.3.3-aarch64-linux-gnu) sha256=c86d6dd3eccc85fe0d792a832b06f2bf3c0a7a83b399308aeb9d8f5725f42a6a
