@@ -265,6 +265,35 @@ p { margin: 0; }
 .legal strong { color: var(--ink); }
 .legal a { color: var(--accent); }
 
+/* The not-found page. studio-engine's Studio::ExceptionsApp draws its
+   studio/not_found partial inside this layout (config/application.rb). The
+   partial's Tailwind classes mean nothing here, so these rules dress it from its
+   data hooks in Rantly's own tokens. public/404.html, the static last resort,
+   carries the same look in plain colour values. */
+[data-studio-not-found] {
+  max-width: 30rem; margin: 32px auto; padding: 40px 24px; text-align: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+}
+[data-studio-not-found-logo] { display: block; width: 64px; height: 64px; margin: 0 auto 24px; object-fit: contain; }
+[data-studio-not-found] > p:first-of-type {
+  margin-bottom: 8px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
+#studio-not-found-title { margin-bottom: 12px; font-size: clamp(26px, 5vw, 32px); letter-spacing: -0.03em; }
+[data-studio-not-found] > p:last-of-type { margin-bottom: 28px; color: var(--ink-2); }
+[data-studio-not-found] > div { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+[data-studio-not-found] a[data-test] {
+  display: inline-block; width: 100%; padding: 12px 22px; border-radius: 999px;
+  font: 800 15px/1 var(--sans); text-decoration: none;
+}
+[data-studio-not-found] a[data-test="not-found-home"] { background: var(--accent); color: var(--accent-ink); }
+[data-studio-not-found] a[data-test="not-found-back"] { border: 1px solid var(--line); color: var(--ink); }
+[data-studio-not-found] a[data-test]:hover { filter: brightness(1.05); }
+[data-studio-not-found] a[data-test="not-found-back"]:hover { color: var(--accent); }
+@media (min-width: 640px) {
+  [data-studio-not-found] > div { flex-direction: row; justify-content: center; }
+  [data-studio-not-found] a[data-test] { width: auto; }
+}
+
 /* Footer */
 .colophon { max-width: 1040px; margin: 0 auto; padding: 24px 16px 40px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
 .colophon p + p { margin-top: 4px; }

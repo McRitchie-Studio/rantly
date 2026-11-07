@@ -99,7 +99,7 @@ class RantsControllerTest < ActionDispatch::IntegrationTest
   test "an unknown rant is a 404" do
     get rant_path("no-such-rant")
     assert_response :not_found
-    assert_match "The page you were looking for", response.body
+    # The page a visitor sees is test/integration/not_found_page_test.rb's.
   end
 
   test "the footer credits the 2014 original and says the data is fictional" do
