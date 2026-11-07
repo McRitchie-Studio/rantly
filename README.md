@@ -40,7 +40,11 @@ form, sends nothing, and says so when pressed. Commenting is switched off.
 
 `SampleData.current` reads the YAML once per process and freezes it, so no
 request can change what the next one sees. An unknown handle or rant id raises
-`SampleData::NotFound`, which the app answers with a logged 404.
+`SampleData::NotFound`. `config/application.rb` maps it to 404, so it gets the
+same friendly not-found page as an unknown address (studio-engine's
+`Studio::ExceptionsApp`, styled in `application.css`; `public/404.html` is the
+branded last resort). Rails logs the error's message (`no rant <id>`) with the
+request.
 
 To add a rant, a user, a follow or a comment, edit `data/sample.yml`. The house
 rules are checked by `SampleDataTest`, which fails naming each broken one:
