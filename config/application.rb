@@ -39,5 +39,20 @@ module Rantly
     # A public, read-only site with no accounts and no forms has nothing to keep
     # in a session, so it sets no cookie at all.
     config.session_store :disabled
+
+    # THE FRIENDLY NOT-FOUND PAGE (studio-engine docs/NOT_FOUND_PAGE.md, task
+    # rantly-adopts-not-found-page). A lost visitor, on an unknown address or a
+    # handle or rant that is not in the sample file, gets Rantly's name, mark and
+    # a button home inside the site's own layout, with status 404. JSON keeps
+    # Rails' 404 JSON. If the page cannot render, the branded public/404.html
+    # answers instead. Guarded so an engine without it (before 0.135.0) keeps
+    # Rails' own exceptions app and public/404.html.
+    config.exceptions_app = Studio::ExceptionsApp.new if defined?(Studio::ExceptionsApp)
+
+    # A handle or rant that is not in data/sample.yml is a 404, the same as an
+    # unknown address: the controller lets SampleData::NotFound go, Rails maps it
+    # to 404 here and hands it to the exceptions app above, so one page serves
+    # both. Rails logs the error's message ("no user @nobody") with the request.
+    config.action_dispatch.rescue_responses["SampleData::NotFound"] = :not_found
   end
 end

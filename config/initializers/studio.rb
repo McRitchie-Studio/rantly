@@ -20,6 +20,12 @@
 # Taking more of the engine (sign-in, admin, error logs) means taking a
 # database first; that is a separate decision, not this file's.
 Studio.configure do |config|
+  # The name and mark the engine's not-found page draws (Studio::ExceptionsApp,
+  # config/application.rb; docs/NOT_FOUND_PAGE.md, "Where the words come from").
+  # Rantly draws its own masthead, so the engine's navbar never reads these.
+  config.app_name = "Rantly"
+  config.navbar_brand = { logo: "/icon.svg", alt: "Rantly" }
+
   # The footer's facts (docs/SITE_FOOTER.md, "The facts"). Like Turf Monster's:
   # a wordmark and logo, a tagline, link columns and a legal line. No address,
   # no map, no phone, no booking schedule and no social profiles: Rantly shows
