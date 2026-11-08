@@ -26,6 +26,13 @@ Studio.configure do |config|
   config.app_name = "Rantly"
   config.navbar_brand = { logo: "/icon.svg", alt: "Rantly" }
 
+  # The standard page header (studio/_page_header) and the legal page around it
+  # (studio/_legal_page), styled by the engine itself: Rantly builds no Tailwind,
+  # so the row brings its own scoped CSS and its small module, once per page
+  # (studio-engine >= 0.136.0; its docs/PAGE_HEADER.md, "In a plain-CSS app").
+  # They read the --color-* tokens app/assets/stylesheets/application.css maps.
+  config.page_header_self_styled = true
+
   # The footer's facts (docs/SITE_FOOTER.md, "The facts"). Like Turf Monster's:
   # a wordmark and logo, a tagline, link columns and a legal line. No address,
   # no map, no phone, no booking schedule and no social profiles: Rantly shows

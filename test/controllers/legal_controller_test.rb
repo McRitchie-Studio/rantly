@@ -11,8 +11,8 @@ class LegalControllerTest < ActionDispatch::IntegrationTest
     get privacy_path
     assert_response :success
     assert_select "title", "Privacy Policy · Rantly"
-    assert_select "article[data-legal-page=privacy] h1", "Privacy Policy"
-    assert_select ".legal__updated", /Last updated: \w+ \d+, \d{4}/
+    assert_select "[data-legal-page=privacy] h1", "Privacy Policy"
+    assert_select "[data-legal-page=privacy] .legal-page-updated", /Last updated \w+ \d+, \d{4}/
     assert_match "McRitchie Studio LLC, doing business as McRitchie Studio", response.body
     assert_select "a[href=?]", "mailto:team@mcritchie.studio"
   end
@@ -21,7 +21,7 @@ class LegalControllerTest < ActionDispatch::IntegrationTest
     get terms_path
     assert_response :success
     assert_select "title", "Terms of Service · Rantly"
-    assert_select "article[data-legal-page=terms] h1", "Terms of Service"
+    assert_select "[data-legal-page=terms] h1", "Terms of Service"
     assert_match "McRitchie Studio LLC, doing business as McRitchie Studio", response.body
     assert_select "article a[href=?]", privacy_path, "Privacy Policy"
   end

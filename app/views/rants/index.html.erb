@@ -1,13 +1,13 @@
 <% content_for :title, "Home" %>
 <div class="layout">
   <div class="layout__main">
-    <h1 class="visually-hidden">Rants</h1>
+    <%# The standard page header (studio/_page_header, self-styled: config/initializers/studio.rb):
+        the page's one h1 and the two sorts of the feed as its tabs. It sticks under the masthead. %>
+    <%= render "studio/page_header", title: "Rants", label: "Sort the feed", tabs: [
+          { label: "Latest", href: root_path, current: (@sort == "latest" ? "page" : nil) },
+          { label: "Most discussed", href: discussed_path, current: (@sort == "discussed" ? "page" : nil) }
+        ] %>
     <%= render "shared/composer" %>
-
-    <nav class="tabs" aria-label="Sort the feed">
-      <%= link_to "Latest", root_path, class: "tabs__tab", aria: { current: (@sort == "latest" ? "page" : nil) } %>
-      <%= link_to "Most discussed", discussed_path, class: "tabs__tab", aria: { current: (@sort == "discussed" ? "page" : nil) } %>
-    </nav>
 
     <div class="feed" data-feed>
       <%= render partial: "rants/card", collection: @rants, as: :rant %>

@@ -4,12 +4,9 @@
 <% content_for(:title, "Terms of Service") %>
 <% content_for(:description, "The terms for using Rantly, McRitchie Studio's showcase social network.") %>
 
-<article class="card legal" data-legal-page="terms" aria-labelledby="legal-title">
-  <header class="legal__head">
-    <h1 id="legal-title" class="legal__title">Terms of Service</h1>
-    <p class="legal__updated">Last updated: October 3, 2026</p>
-  </header>
-
+<%= render layout: "studio/legal_page", locals: {
+      title: "Terms of Service", updated: "October 3, 2026",
+      links: [ { label: "Privacy Policy", href: privacy_path } ], data: { legal_page: "terms" } } do %>
   <section>
     <h2>1. The Service</h2>
     <p>Rantly, at <a href="https://rantly.mcritchie.studio">rantly.mcritchie.studio</a> (the "Service"), is operated by McRitchie Studio LLC, doing business as McRitchie Studio ("McRitchie Studio", "we", "us"). By using the Service you agree to these Terms. If you do not agree, please do not use it.</p>
@@ -55,4 +52,4 @@
     <h2>9. Contact</h2>
     <p>Questions about these Terms? Email <a href="mailto:team@mcritchie.studio">team@mcritchie.studio</a>. How we handle information is in the <%= link_to "Privacy Policy", privacy_path %>.</p>
   </section>
-</article>
+<% end %>

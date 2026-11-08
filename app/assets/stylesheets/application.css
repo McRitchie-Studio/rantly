@@ -21,9 +21,10 @@
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   color-scheme: light dark;
 
-  /* The studio-engine theme tokens, as Rantly's own colours. Only the engine's
-     site footer reads them (studio_site_footer; its inline CSS falls back to a
-     violet primary and a transparent band without them). The -rgb triplet is
+  /* The studio-engine theme tokens, as Rantly's own colours. The engine's site
+     footer (studio_site_footer), its page header (studio/_page_header) and its
+     legal page (studio/_legal_page) read them; their inline CSS falls back to a
+     violet primary and a transparent band without them. The -rgb triplet is
      --accent's, spelled out, because the footer composes it as rgb(... / a). */
   --color-primary: var(--accent);
   --color-primary-500-rgb: 214 60 31;
@@ -36,6 +37,14 @@
   --color-surface: var(--surface);
   --color-surface-alt: var(--surface-2);
   --color-border: var(--line);
+  /* The engine's page header (studio/_page_header) fills its primary tab with
+     --color-primary; its text is --accent-ink, which turns dark in dark mode
+     (#ff6a4d with white is 2.9:1, under 4.5:1). */
+  --btn-primary-fg: var(--accent-ink);
+  /* Links in the engine's legal page column. --accent on --bg is 4.1:1 in light
+     mode, so the column's links take a darker red (5.3:1); dark mode's --accent
+     already passes (6.5:1 on --bg). */
+  --color-primary-ink: #b83219;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -53,6 +62,7 @@
     --ready: #5fd38f;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
     --color-primary-500-rgb: 255 106 77;
+    --color-primary-ink: var(--accent);
   }
 }
 
@@ -172,14 +182,6 @@ p { margin: 0; }
 .button:hover { filter: brightness(1.05); }
 .button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Tabs */
-.tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--line); }
-.tabs__tab {
-  padding: 10px 14px; text-decoration: none; color: var(--ink-3); font-weight: 700; font-size: 15px;
-  border-bottom: 3px solid transparent; margin-bottom: -1px;
-}
-.tabs__tab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
-
 /* Feed cards */
 .feed { display: flex; flex-direction: column; gap: 16px; }
 .rant-card { display: flex; flex-direction: column; gap: 10px; }
@@ -255,15 +257,13 @@ p { margin: 0; }
 .profile__stats strong { color: var(--ink); }
 .profile__stats a:hover strong { color: var(--accent); }
 
-/* Legal pages (/privacy, /terms) */
-.legal { max-width: 46rem; margin: 0 auto; padding: 28px; display: flex; flex-direction: column; gap: 22px; }
-.legal__title { font-size: clamp(28px, 5vw, 36px); letter-spacing: -0.03em; }
-.legal__updated { color: var(--ink-3); font-size: 14px; margin-top: 6px; }
-.legal section { display: flex; flex-direction: column; gap: 10px; }
-.legal h2 { font-size: 19px; letter-spacing: -0.01em; }
-.legal p { color: var(--ink-2); font-size: 16px; line-height: 1.65; }
-.legal strong { color: var(--ink); }
-.legal a { color: var(--accent); }
+/* Legal pages (/privacy, /terms): studio-engine's studio/_legal_page draws the
+   header and the column. On a phone its own 1rem gutter would double .page's, so
+   the column gives its gutter up there; the row's default bleed still fits inside
+   .page's 16px. */
+@media (max-width: 560px) {
+  .page > .legal-page { padding-inline: 0; }
+}
 
 /* The not-found page. studio-engine's Studio::ExceptionsApp draws its
    studio/not_found partial inside this layout (config/application.rb). The
@@ -301,12 +301,11 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .masthead__tagline { display: none; }
   .rant { padding: 20px; }
-  .legal { padding: 20px; }
   .rant__body { font-size: 18px; }
   .rant-card__title { font-size: 20px; }
   .read-more { margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .person, .tabs__tab, .button { transition: background-color 120ms ease, color 120ms ease, filter 120ms ease; }
+  .person, .button { transition: background-color 120ms ease, color 120ms ease, filter 120ms ease; }
 }
