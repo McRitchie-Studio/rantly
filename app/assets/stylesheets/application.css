@@ -41,16 +41,20 @@
      --color-primary; its text is --accent-ink, which turns dark in dark mode
      (#ff6a4d with white is 2.9:1, under 4.5:1). */
   --btn-primary-fg: var(--accent-ink);
-  /* Links in the engine's legal page column. --accent on --bg is 4.1:1 in light
-     mode, so the column's links take a darker red (5.3:1); dark mode's --accent
-     already passes (6.5:1 on --bg). */
+  /* The link ink: the one colour every hover paints, Rantly's own and the
+     engine's legal column alike. --accent on --bg is 4.12:1 in light mode (3.91:1
+     on the footer band), under the 4.5:1 a link needs, so links take a darker red:
+     5.32:1 on --bg, 5.89:1 on --surface, 5.04:1 on --surface-2. Dark mode's
+     --accent already passes (6.54:1 on --bg, 5.44:1 on --surface-2). */
   --color-primary-ink: #b83219;
   /* The masthead's height (12px padding twice, the 36px wordmark, a 1px rule),
      the same at every width. The engine's sticky page header sits at
      var(--pin-page-top, var(--nav-bottom, var(--nav-h, 0px))); its module
      publishes --nav-bottom from the masthead, and until it runs (or with
-     JavaScript off) this keeps the stuck row under the masthead, not at 0. */
+     JavaScript off) this keeps the stuck row under the masthead, not at 0.
+     The desktop sidebar sticks --aside-gap below it, so a taller masthead moves both. */
   --nav-h: 61px;
+  --aside-gap: 23px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,7 +89,7 @@ body {
 }
 
 a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
-a:hover { color: var(--accent); }
+a:hover { color: var(--color-primary-ink); }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 
 h1, h2, h3 { margin: 0; line-height: 1.2; }
@@ -130,13 +134,13 @@ p { margin: 0; }
 .layout__main, .layout__aside { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 @media (min-width: 880px) {
   .layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; }
-  .layout__aside { position: sticky; top: 84px; align-self: start; }
+  .layout__aside { position: sticky; top: calc(var(--nav-h) + var(--aside-gap)); align-self: start; }
 }
 
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
 .crumb { font-size: 14px; }
 .crumb a { color: var(--ink-3); text-decoration: none; }
-.crumb a:hover { color: var(--accent); }
+.crumb a:hover { color: var(--color-primary-ink); }
 .empty { color: var(--ink-3); font-style: italic; }
 .section-title { font-size: 20px; letter-spacing: -0.01em; }
 .section-heading { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin-top: 8px; }
@@ -160,7 +164,7 @@ p { margin: 0; }
 .byline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ink-3); font-size: 14px; }
 .byline__who { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
 .byline__name { color: var(--ink); font-weight: 700; }
-.byline__who:hover .byline__name { color: var(--accent); }
+.byline__who:hover .byline__name { color: var(--color-primary-ink); }
 .byline__handle { color: var(--ink-3); }
 .byline__stack { display: flex; flex-direction: column; line-height: 1.3; }
 .byline--large .byline__name { font-size: 17px; }
@@ -261,7 +265,7 @@ p { margin: 0; }
 .profile__stats { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 18px; font-size: 15px; }
 .profile__stats a { text-decoration: none; color: var(--ink-3); }
 .profile__stats strong { color: var(--ink); }
-.profile__stats a:hover strong { color: var(--accent); }
+.profile__stats a:hover strong { color: var(--color-primary-ink); }
 
 /* Legal pages (/privacy, /terms): studio-engine's studio/_legal_page draws the
    header and the column. On a phone its own 1rem gutter would double .page's, so
@@ -270,9 +274,9 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .page > .legal-page { padding-inline: 0; }
 }
-/* The global a:hover paints a link --accent, 4.12:1 on the light page. The
-   engine's .legal-page-body a has the same specificity and wins only by coming
-   later, so the hover is pinned here, whichever sheet loads last. */
+/* The engine's .legal-page-body a ties the global a:hover on specificity and
+   wins only by coming later, so the link ink is pinned here too, whichever
+   sheet loads last. */
 .legal-page-body a:hover { color: var(--color-primary-ink); }
 
 /* The not-found page. studio-engine's Studio::ExceptionsApp draws its
@@ -298,13 +302,17 @@ p { margin: 0; }
 [data-studio-not-found] a[data-test="not-found-home"] { background: var(--accent); color: var(--accent-ink); }
 [data-studio-not-found] a[data-test="not-found-back"] { border: 1px solid var(--line); color: var(--ink); }
 [data-studio-not-found] a[data-test]:hover { filter: brightness(1.05); }
-[data-studio-not-found] a[data-test="not-found-back"]:hover { color: var(--accent); }
+[data-studio-not-found] a[data-test="not-found-back"]:hover { color: var(--color-primary-ink); }
 @media (min-width: 640px) {
   [data-studio-not-found] > div { flex-direction: row; justify-content: center; }
   [data-studio-not-found] a[data-test] { width: auto; }
 }
 
 /* Footer */
+/* The engine's site footer paints a hovered link --color-primary (--accent),
+   3.91:1 on its light band. Its rule is .ftr-link:hover in an inline <style>
+   after this sheet, so the link ink is pinned one class stronger. */
+.ftr .ftr-link:hover, .ftr .ftr-link:focus-visible { color: var(--color-primary-ink); }
 .colophon { max-width: 1040px; margin: 0 auto; padding: 24px 16px 40px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
 .colophon p + p { margin-top: 4px; }
 
