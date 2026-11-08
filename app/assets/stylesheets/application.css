@@ -274,9 +274,9 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .page > .legal-page { padding-inline: 0; }
 }
-/* The global a:hover paints a link --accent, 4.12:1 on the light page. The
-   engine's .legal-page-body a has the same specificity and wins only by coming
-   later, so the hover is pinned here, whichever sheet loads last. */
+/* The engine's .legal-page-body a ties the global a:hover on specificity and
+   wins only by coming later, so the link ink is pinned here too, whichever
+   sheet loads last. */
 .legal-page-body a:hover { color: var(--color-primary-ink); }
 
 /* The not-found page. studio-engine's Studio::ExceptionsApp draws its

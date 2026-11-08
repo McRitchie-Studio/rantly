@@ -99,7 +99,7 @@ no page header.
 | `application.css` `:root` | `--aside-gap: 23px` | The desktop sidebar sticks at `calc(var(--nav-h) + var(--aside-gap))`, 84px today, so a masthead change moves it too |
 | `application.css` | `.ftr .ftr-link:hover { color: var(--color-primary-ink) }` | The engine footer's own hover paints `--color-primary` (3.91:1 on its light band) from an inline style after this sheet, so the pin is one class stronger |
 | `application.css`, 560px query | `.page > .legal-page { padding-inline: 0 }` | On a phone the column's gutter would double `.page`'s |
-| `application.css` | `.legal-page-body a:hover { color: var(--color-primary-ink) }` | The global `a:hover` (`--accent`, 4.12:1 on light) ties the engine's link rule on specificity; this keeps 4.5:1 in either sheet order |
+| `application.css` | `.legal-page-body a:hover { color: var(--color-primary-ink) }` | The engine's `.legal-page-body a` ties the global `a:hover` on specificity; this keeps the link ink in either sheet order |
 
 ## Legal pages
 
