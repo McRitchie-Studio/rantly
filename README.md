@@ -95,7 +95,9 @@ no page header.
 |-------|------|-----|
 | `application.css` `:root` | `--btn-primary-fg: var(--accent-ink)` | The current tab's text clears 4.5:1 on the accent in both schemes |
 | `application.css` `:root` | `--color-primary-ink: #b83219` (light) | The legal column's links clear 4.5:1 on the page background |
+| `application.css` `:root` | `--nav-h: 61px` | The masthead's height at every width; the stuck row pins under it before the module runs or with JavaScript off. Do not set `--nav-bottom` or `--pin-page-top` here: the module stops measuring when either is set |
 | `application.css`, 560px query | `.page > .legal-page { padding-inline: 0 }` | On a phone the column's gutter would double `.page`'s |
+| `application.css` | `.legal-page-body a:hover { color: var(--color-primary-ink) }` | The global `a:hover` (`--accent`, 4.12:1 on light) ties the engine's link rule on specificity; this keeps 4.5:1 in either sheet order |
 
 ## Legal pages
 

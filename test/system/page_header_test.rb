@@ -71,6 +71,68 @@ class PageHeaderSystemTest < ApplicationSystemTestCase
     reset_emulation
   end
 
+  # Regression: before the engine's module runs (or with JavaScript off), nothing
+  # publishes --nav-bottom, so the row's top fell back to 0 and the stuck row slid
+  # under the masthead. Rantly's :root --nav-h is the fallback. The module is
+  # blocked at the network, so the page keeps no script-set value.
+  test "without the header's module the row still pins under the masthead" do
+    cdp("Network.enable")
+    cdp("Network.setBlockedURLs", urls: [ "*page_header_self_styled*" ])
+    SCHEMES.each do |scheme|
+      emulate_scheme(scheme)
+      WIDTHS.each do |width|
+        emulate_width(width)
+        PAGES.each_key do |path|
+          visit path
+          where = "#{path} at #{width}px #{scheme}, module blocked"
+          assert_equal width, page.evaluate_script("window.innerWidth"), "the emulated viewport did not take"
+          assert_equal "", page.evaluate_script("document.documentElement.style.getPropertyValue('--nav-bottom')"),
+                       "#{where}: the module ran; the block did not take"
+          page.execute_script("window.scrollTo(0, 1500)")
+          assert_equal 1500, page.evaluate_script("Math.round(window.scrollY)"), "#{where}: did not scroll 1500px"
+          masthead, row = page.evaluate_script(<<~JS)
+            [document.querySelector('header.masthead').getBoundingClientRect().bottom,
+             document.querySelector('.page-header').getBoundingClientRect().top]
+          JS
+          assert_in_delta masthead, row, 0.5, "#{where}: the row's top (#{row}) is not the masthead's bottom (#{masthead})"
+        end
+      end
+    end
+  ensure
+    cdp("Network.setBlockedURLs", urls: [])
+    cdp("Network.disable")
+    reset_emulation
+  end
+
+  # Regression: Rantly's global a:hover paints a link --accent, 4.12:1 on the
+  # light page. The engine's .legal-page-body a has the same specificity and only
+  # wins today because its inline <style> follows application.css; the hover must
+  # hold whichever sheet comes last, so the second pass moves Rantly's sheet after it.
+  test "a legal page link keeps 4.5:1 on hover, light and dark, in either sheet order" do
+    SCHEMES.each do |scheme|
+      emulate_scheme(scheme)
+      WIDTHS.each do |width|
+        emulate_width(width)
+        [ "layout order", "Rantly's sheet last" ].each do |order|
+          visit privacy_path
+          assert_equal width, page.evaluate_script("window.innerWidth"), "the emulated viewport did not take"
+          if order == "Rantly's sheet last"
+            page.execute_script(<<~JS)
+              document.body.appendChild(document.querySelector('link[rel=stylesheet][href*="app"]'))
+            JS
+            assert page.evaluate_script("document.body.lastElementChild.matches('link[rel=stylesheet]')")
+          end
+          find(".legal-page-body a", match: :first).hover
+          assert page.evaluate_script("document.querySelector('.legal-page-body a').matches(':hover')"), "the hover did not take"
+          ratio = page.evaluate_script("(#{CONTRAST})(document.querySelector('.legal-page-body a'), document.body)")
+          assert_operator ratio, :>=, 4.5, "a hovered legal link is #{ratio.round(2)}:1 at #{width}px in #{scheme} (#{order})"
+        end
+      end
+    end
+  ensure
+    reset_emulation
+  end
+
   test "on a phone the legal column does not double the page's gutter" do
     emulate_width(390)
     visit privacy_path
