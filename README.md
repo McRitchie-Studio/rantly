@@ -11,7 +11,8 @@ code was ported.
 It is a Rails 8.1 app with **no database** and no accounts, so it runs on one
 Heroku Eco dyno. Anyone can browse it without signing in. It takes
 [studio-engine](https://github.com/McRitchie-Studio/studio-engine) for one
-thing only, the shared site footer (see *Site footer* below).
+thing only: shared views, the site footer and the standard page header (see
+*Site footer* and *Page header* below).
 
 ## What it does
 
@@ -76,6 +77,26 @@ Rantly:
 | `config/routes.rb` | No `Studio.routes(self)` | The engine draws no routes: no `/login`, `/admin`, `/_studio/*` |
 | `app/assets/stylesheets/application.css` | `--color-*` tokens mapped to Rantly's palette | The footer reads the engine's theme tokens; without them it falls back to violet |
 
+## Page header
+
+The feed (`/`, `/discussed`) and the legal pages open with studio-engine's
+standard page header (`studio/_page_header`): the page's one h1 on the left,
+the feed's two sorts as tabs on the right. It sticks under Rantly's sticky
+masthead once the page scrolls. Rantly builds no Tailwind, so
+`config/initializers/studio.rb` sets `config.page_header_self_styled = true`
+(studio-engine >= 0.136.0) and the row brings its own scoped CSS and a small
+module with no imports, once per page. The engine's own contract is its
+`docs/PAGE_HEADER.md`. `/privacy` and `/terms` render inside the engine's
+`studio/_legal_page` layout (the header, the "Last updated" line and a
+readable column). A rant and a profile keep their h1 in their card and take
+no page header.
+
+| Where | What | Why |
+|-------|------|-----|
+| `application.css` `:root` | `--btn-primary-fg: var(--accent-ink)` | The current tab's text clears 4.5:1 on the accent in both schemes |
+| `application.css` `:root` | `--color-primary-ink: #b83219` (light) | The legal column's links clear 4.5:1 on the page background |
+| `application.css`, 560px query | `.page > .legal-page { padding-inline: 0 }` | On a phone the column's gutter would double `.page`'s |
+
 ## Legal pages
 
 `/privacy` and `/terms` are written from what the app does. Change a practice
@@ -89,7 +110,7 @@ another origin.
 | Nothing typed in the rant box is sent or saved | `app/javascript/composer.js` makes no request; `app/views/shared/_composer.html.erb` is not a form |
 | Commenting is off | No comment form; comments are sample data in `data/sample.yml` |
 | No cookies, no browser storage | `config.session_store :disabled` (`config/application.rb`); no `localStorage` or cookie code in `app/` |
-| No analytics or tracking scripts | `config/importmap.rb` pins only `application` and `composer` |
+| No analytics or tracking scripts | `config/importmap.rb` pins only `application` and `composer`; the one other script is studio-engine's same-origin page-header module (*Page header*), which makes no request |
 | Pages load nothing from other origins | Every asset is same-origin; the footer has no map (`config/initializers/studio.rb`) |
 | Server logs hold IP, page, time and request details | Rails logs each request with the client IP at `info` (`config/environments/production.rb`); Heroku's router logs it too |
 | Hosted by Heroku | *Deploy*, below |

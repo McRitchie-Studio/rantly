@@ -25,7 +25,7 @@ class BrowseTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Eleanor Voss"
 
     click_on "Back to the feed"
-    assert_selector ".tabs a[aria-current=page]", text: "Latest"
+    assert_selector ".page-header-tabs a[aria-current=page]", text: "Latest"
   end
 
   test "the demo composer counts toward 140 and never posts" do
@@ -57,8 +57,8 @@ class BrowseTest < ApplicationSystemTestCase
   test "Most discussed puts the busiest rant on top" do
     visit root_path
     # The tab, not the site footer's link of the same name and destination.
-    within(".tabs") { click_on "Most discussed" }
-    assert_selector ".tabs a[aria-current=page]", text: "Most discussed"
+    within(".page-header-tabs") { click_on "Most discussed" }
+    assert_selector ".page-header-tabs a[aria-current=page]", text: "Most discussed"
     assert_equal "Reply-all is not a personality", first("h2.rant-card__title").text
   end
 

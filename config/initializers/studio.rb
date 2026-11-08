@@ -1,11 +1,14 @@
-# studio-engine, taken as a VIEW LIBRARY for the site footer, and nothing else.
+# studio-engine, taken as a VIEW LIBRARY for the site footer and the standard
+# page header, and nothing else.
 #
 # Rantly has no database, no accounts and no session (config/application.rb
 # disables the session store), so it cannot take the engine's auth, admin pages,
 # error logs or models: every one of them is ActiveRecord, and this app loads no
 # ActiveRecord. What it takes is the footer helper (`studio_site_footer`, the
 # engine's app/helpers/studio/site_footer_helper.rb), its partials and its
-# scoped inline CSS. The engine's docs/SITE_FOOTER.md is the contract.
+# scoped inline CSS; and the page header (studio/_page_header) with the legal
+# page around it (studio/_legal_page), self-styled below. The engine's
+# docs/SITE_FOOTER.md and docs/PAGE_HEADER.md are the contracts.
 #
 # The engine handles an app with no database itself (studio-engine >= 0.86,
 # Studio.active_record?; its docs/SITE_FOOTER.md, "An app with no database"):
@@ -25,6 +28,13 @@ Studio.configure do |config|
   # Rantly draws its own masthead, so the engine's navbar never reads these.
   config.app_name = "Rantly"
   config.navbar_brand = { logo: "/icon.svg", alt: "Rantly" }
+
+  # The standard page header (studio/_page_header) and the legal page around it
+  # (studio/_legal_page), styled by the engine itself: Rantly builds no Tailwind,
+  # so the row brings its own scoped CSS and its small module, once per page
+  # (studio-engine >= 0.136.0; its docs/PAGE_HEADER.md, "In a plain-CSS app").
+  # They read the --color-* tokens app/assets/stylesheets/application.css maps.
+  config.page_header_self_styled = true
 
   # The footer's facts (docs/SITE_FOOTER.md, "The facts"). Like Turf Monster's:
   # a wordmark and logo, a tagline, link columns and a legal line. No address,

@@ -35,8 +35,8 @@ class ProductionSslTest < ActiveSupport::TestCase
     assert_nil response["set_cookie"], "the public page should set no cookie"
   end
 
-  # studio-engine is in the bundle as a view library only
-  # (config/initializers/studio.rb). Production eager-loads, which is where the
+  # studio-engine is in the bundle as a view library only: the site footer and
+  # the self-styled page header (config/initializers/studio.rb). Production eager-loads, which is where the
   # engine's ActiveRecord models and auth-bound controllers would break the boot
   # if the engine did not keep them out of eager loading in an app with no
   # ActiveRecord. Rantly does nothing to help it: this is the engine's promise.
@@ -50,6 +50,7 @@ class ProductionSslTest < ActiveSupport::TestCase
       response = self.class.results["https #{path}"]
       assert_equal 200, response["status"], path
       assert response["footer"], "#{path} should carry the site footer"
+      assert response["page_header"], "#{path} should carry the self-styled page header and its digested module"
       assert_nil response["set_cookie"], "#{path} should set no cookie"
     end
   end

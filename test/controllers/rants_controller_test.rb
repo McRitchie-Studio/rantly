@@ -36,7 +36,7 @@ class RantsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     titles = css_select("[data-feed] .rant-card__title a").map { |a| a.text.strip }
     assert_equal Rant.feed("discussed").map(&:title), titles
-    assert_select ".tabs a[aria-current=page]", "Most discussed"
+    assert_select ".page-header-tabs a[aria-current=page]", "Most discussed"
   end
 
   # A static host ignores a query string, so the sorted feed has a path of its
@@ -46,15 +46,15 @@ class RantsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     titles = css_select("[data-feed] .rant-card__title a").map { |a| a.text.strip }
     assert_equal Rant.feed("discussed").map(&:title), titles
-    assert_select ".tabs a[aria-current=page][href=?]", "/discussed", "Most discussed"
-    assert_select ".tabs a[href=?]", "/", "Latest"
+    assert_select ".page-header-tabs a[aria-current=page][href=?]", "/discussed", "Most discussed"
+    assert_select ".page-header-tabs a[href=?]", "/", "Latest"
     assert_no_match(/href="[^"]*\?sort=/, response.body)
   end
 
   test "an unknown sort shows the latest feed" do
     get root_path(sort: "<script>")
     assert_response :success
-    assert_select ".tabs a[aria-current=page]", "Latest"
+    assert_select ".page-header-tabs a[aria-current=page]", "Latest"
   end
 
   test "the demo composer is labelled as a demo and is not a form" do

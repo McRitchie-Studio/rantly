@@ -2,7 +2,8 @@
 # requests Heroku's router forwards (X-Forwarded-Proto says what the visitor
 # typed) through the real production middleware stack and prints what came
 # back, one JSON object keyed "<proto> <path>". "footer" says whether the page
-# carried the engine's site footer; "eager_loaded" that production eager-loaded
+# carried the engine's site footer, "page_header" its self-styled page header
+# module; "eager_loaded" that production eager-loaded
 # the app (with studio-engine in the bundle) and still booted.
 require "json"
 
@@ -16,7 +17,9 @@ results = requests.to_h do |proto, path|
   body.each { |chunk| html << chunk }
   body.close if body.respond_to?(:close)
   [ "#{proto} #{path}", { "status" => status, "location" => headers["location"], "set_cookie" => headers["set-cookie"],
-                          "footer" => html.include?("data-site-footer") } ]
+                          "footer" => html.include?("data-site-footer"),
+                          "page_header" => html.include?('class="page-header sticky') &&
+                                           html.match?(%r{src="/assets/studio/page_header_self_styled-\h+\.js"}) } ]
 end
 results["eager_loaded"] = Rails.application.config.eager_load
 
