@@ -45,6 +45,12 @@
      mode, so the column's links take a darker red (5.3:1); dark mode's --accent
      already passes (6.5:1 on --bg). */
   --color-primary-ink: #b83219;
+  /* The masthead's height (12px padding twice, the 36px wordmark, a 1px rule),
+     the same at every width. The engine's sticky page header sits at
+     var(--pin-page-top, var(--nav-bottom, var(--nav-h, 0px))); its module
+     publishes --nav-bottom from the masthead, and until it runs (or with
+     JavaScript off) this keeps the stuck row under the masthead, not at 0. */
+  --nav-h: 61px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -264,6 +270,10 @@ p { margin: 0; }
 @media (max-width: 560px) {
   .page > .legal-page { padding-inline: 0; }
 }
+/* The global a:hover paints a link --accent, 4.12:1 on the light page. The
+   engine's .legal-page-body a has the same specificity and wins only by coming
+   later, so the hover is pinned here, whichever sheet loads last. */
+.legal-page-body a:hover { color: var(--color-primary-ink); }
 
 /* The not-found page. studio-engine's Studio::ExceptionsApp draws its
    studio/not_found partial inside this layout (config/application.rb). The

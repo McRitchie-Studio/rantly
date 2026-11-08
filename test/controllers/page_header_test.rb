@@ -28,6 +28,19 @@ class PageHeaderTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # The served sheet, not the source: the row's no-script fallback and the legal
+  # hover pin must reach the browser (test/system/page_header_test.rb measures them).
+  test "the served stylesheet sets --nav-h on :root and pins the legal link hover" do
+    get "/privacy"
+    href = css_select("link[rel=stylesheet]").map { |l| l["href"] }.find { |h| h.include?("/app") }
+    assert href, "the layout links Rantly's sheet"
+    get href
+    assert_response :success
+    root = response.body[/^:root\s*\{.*?^\}/m]
+    assert_match(/--nav-h:\s*61px;/, root, "the :root block sets the masthead's height for the stuck row")
+    assert_match(/\.legal-page-body a:hover\s*\{\s*color:\s*var\(--color-primary-ink\);\s*\}/, response.body)
+  end
+
   test "the rant and profile pages keep their h1 in the card and take no header" do
     CARD_PAGES.each do |path|
       get path
