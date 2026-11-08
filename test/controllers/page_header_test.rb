@@ -41,6 +41,28 @@ class PageHeaderTest < ActionDispatch::IntegrationTest
     assert_match(/\.legal-page-body a:hover\s*\{\s*color:\s*var\(--color-primary-ink\);\s*\}/, response.body)
   end
 
+  # Every hover in the served sheet paints the one link ink, --color-primary-ink
+  # (test/system/hover_contrast_test.rb measures it); none paints raw --accent,
+  # 4.12:1 on the light page. The sidebar's sticky top derives from --nav-h.
+  test "the served stylesheet's hovers take the link ink and the sidebar's top derives from --nav-h" do
+    get "/"
+    get css_select("link[rel=stylesheet]").map { |l| l["href"] }.find { |h| h.include?("/app") }
+    assert_response :success
+    css = response.body.gsub(%r{/\*.*?\*/}m, "")
+    hovers = css.scan(/([^{}]*:hover[^{}]*)\{([^{}]*)\}/).select { |_, body| body.match?(/(?<![-\w])color:/) }
+    assert_operator hovers.size, :>=, 6, "the sheet's colour hovers were not found"
+    hovers.each do |selector, body|
+      refute_match(/(?<![-\w])color:\s*var\(--accent\)/, body, "#{selector.strip} paints raw --accent on hover")
+      assert_match(/(?<![-\w])color:\s*(var\(--color-primary-ink\)|inherit)/, body, "#{selector.strip} does not take the link ink")
+    end
+    %w[a .crumb\ a .profile__stats\ a .byline__who .ftr\ .ftr-link].each do |sel|
+      assert hovers.any? { |s, _| s.split(",").map(&:strip).any? { |one| one.start_with?("#{sel}:hover") } }, "no ink hover for #{sel}"
+    end
+    assert_match(/\.layout__aside\s*\{[^}]*top:\s*calc\(var\(--nav-h\)\s*\+\s*var\(--aside-gap\)\)/, css, "the sidebar's top is not derived from --nav-h")
+    assert_match(/--aside-gap:\s*23px;/, css[/^:root\s*\{.*?^\}/m], "the :root block sets the sidebar's gap under the masthead")
+    refute_match(/top:\s*84px/, css)
+  end
+
   test "the rant and profile pages keep their h1 in the card and take no header" do
     CARD_PAGES.each do |path|
       get path

@@ -94,8 +94,10 @@ no page header.
 | Where | What | Why |
 |-------|------|-----|
 | `application.css` `:root` | `--btn-primary-fg: var(--accent-ink)` | The current tab's text clears 4.5:1 on the accent in both schemes |
-| `application.css` `:root` | `--color-primary-ink: #b83219` (light) | The legal column's links clear 4.5:1 on the page background |
+| `application.css` `:root` | `--color-primary-ink: #b83219` (light) | The link ink: every hover rule paints it (the global `a:hover`, crumbs, bylines, profile stats, the colophon, the legal column, the engine footer). `--accent` is 4.12:1 on light; this is 5.04:1 or better on every light surface |
 | `application.css` `:root` | `--nav-h: 61px` | The masthead's height at every width; the stuck row pins under it before the module runs or with JavaScript off. Do not set `--nav-bottom` or `--pin-page-top` here: the module stops measuring when either is set |
+| `application.css` `:root` | `--aside-gap: 23px` | The desktop sidebar sticks at `calc(var(--nav-h) + var(--aside-gap))`, 84px today, so a masthead change moves it too |
+| `application.css` | `.ftr .ftr-link:hover { color: var(--color-primary-ink) }` | The engine footer's own hover paints `--color-primary` (3.91:1 on its light band) from an inline style after this sheet, so the pin is one class stronger |
 | `application.css`, 560px query | `.page > .legal-page { padding-inline: 0 }` | On a phone the column's gutter would double `.page`'s |
 | `application.css` | `.legal-page-body a:hover { color: var(--color-primary-ink) }` | The global `a:hover` (`--accent`, 4.12:1 on light) ties the engine's link rule on specificity; this keeps 4.5:1 in either sheet order |
 

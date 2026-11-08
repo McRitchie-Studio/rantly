@@ -63,10 +63,12 @@ class HoverContrastSystemTest < ApplicationSystemTestCase
   # plus a 23px gap below it, 84px today. A change to --nav-h must move it too.
   test "the sidebar pins 23px under the masthead at desktop, and follows --nav-h" do
     emulate_width(1400)
-    visit "/@rantly"
+    # The feed: its main column is thousands of pixels taller than the sidebar,
+    # so the sidebar has room to stay stuck after a 1500px scroll.
+    visit "/"
     assert_equal 1400, page.evaluate_script("window.innerWidth"), "the emulated viewport did not take"
-    page.execute_script("window.scrollTo(0, 400)")
-    assert_equal 400, page.evaluate_script("Math.round(window.scrollY)"), "the profile did not scroll 400px"
+    page.execute_script("window.scrollTo(0, 1500)")
+    assert_equal 1500, page.evaluate_script("Math.round(window.scrollY)"), "the feed did not scroll 1500px"
     masthead, aside = page.evaluate_script(<<~JS)
       [document.querySelector('header.masthead').getBoundingClientRect().bottom,
        document.querySelector('.layout__aside').getBoundingClientRect().top]
