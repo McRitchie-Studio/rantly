@@ -459,7 +459,7 @@ DEPENDENCIES
   rails (~> 8.1.4)
   rubocop-rails-omakase
   selenium-webdriver
-  studio-engine (~> 0.86)
+  studio-engine (~> 0.136)
   tzinfo-data
   web-console
 
