@@ -11,21 +11,31 @@
 # gem. An entry that carries its own `url:` is left alone. The relative path
 # resolves under the app root, so each desk keeps its own files.
 #
+# WHY `adapter:` AND `database:` AS WELL. The hub reads this file without
+# booting the app (mcritchie-studio app/models/release/gate_workspace.rb): the
+# adapter tells the release gate not to hand the app a Postgres URL, and
+# `test.database` is the name the pre-flight's guard compares against. They
+# must name the same file as `url:`, which wins when Rails merges them.
+#
 # PRODUCTION on Heroku: the file sits on the dyno's ephemeral disk and is lost
 # on every restart. That is acceptable only because the token database holds
 # nothing. Storing anything real means moving to Postgres first.
 default: &default
+  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
   <<: *default
+  database: storage/development.sqlite3
   url: sqlite3:storage/development.sqlite3
 
 test:
   <<: *default
+  database: storage/test.sqlite3
   url: sqlite3:storage/test.sqlite3
 
 production:
   <<: *default
+  database: storage/production.sqlite3
   url: sqlite3:storage/production.sqlite3

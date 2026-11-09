@@ -52,6 +52,22 @@ class TokenDatabaseTest < ActiveSupport::TestCase
     assert_includes out, "EAGER=true"
   end
 
+  # The hub reads config/database.yml WITHOUT booting (ERB stripped): the
+  # adapter keeps the release gate from overlaying a Postgres URL, and
+  # test.database is what the pre-flight's guard compares a desk against. Rails
+  # boots from `url:`. If the two ever named different files, the hub would
+  # judge one database while the app used another.
+  test "every environment's database: names the same file as its url:" do
+    raw = Rails.root.join("config/database.yml").read.gsub(/<%.*?%>/m, "")
+    config = YAML.safe_load(raw, aliases: true)
+
+    %w[development test production].each do |env|
+      entry = config.fetch(env)
+      assert_equal "sqlite3", entry["adapter"], "#{env}: adapter"
+      assert_equal "sqlite3:#{entry.fetch('database')}", entry.fetch("url"), "#{env}: database and url disagree"
+    end
+  end
+
   test "db:prepare succeeds on the empty schema" do
     env = { "RAILS_ENV" => "test" }
     _out, err, status = Open3.capture3(env, "bin/rails", "db:prepare", chdir: Rails.root.to_s)
