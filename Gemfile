@@ -8,6 +8,10 @@ gem "rails", "~> 8.1.4"
 gem "propshaft"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+# The token database (config/database.yml): a SQLite file that holds nothing
+# yet, so the shared tooling (desk bringup, the pre-flight's test-database
+# guard) finds the ActiveRecord app it expects. It adds no Heroku add-on.
+gem "sqlite3", ">= 2.1"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 

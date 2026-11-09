@@ -4,7 +4,7 @@ require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
 # require "active_job/railtie"
-# require "active_record/railtie"
+require "active_record/railtie"
 # require "active_storage/engine"
 require "action_controller/railtie"
 # require "action_mailer/railtie"
@@ -54,5 +54,20 @@ module Rantly
     # to 404 here and hands it to the exceptions app above, so one page serves
     # both. Rails logs the error's message ("no user @nobody") with the request.
     config.action_dispatch.rescue_responses["SampleData::NotFound"] = :not_found
+
+    # THE TOKEN DATABASE (config/database.yml) loads ActiveRecord, and the
+    # engine reads that (Studio.active_record?) as "this app takes my database
+    # features", so it would EAGER LOAD its controllers and models. Its
+    # controllers skip :require_authentication, which Rantly never defines
+    # (no Studio.routes, no sign-in), so production's eager load would raise
+    # at boot. Keep the engine's footer-only rule instead: eager load only its
+    # helpers, exactly as it does for an app with no ActiveRecord. Rantly calls
+    # none of the rest. test/integration/token_database_test.rb boots with
+    # eager loading to pin it.
+    initializer "rantly.engine_footer_only_eager_load" do
+      Studio::Engine.active_record_dependent_roots.each do |path|
+        Rails.autoloaders.main.do_not_eager_load(path)
+      end
+    end
   end
 end

@@ -1,28 +1,32 @@
-# studio-engine, taken as a VIEW LIBRARY for the site footer and the standard
-# page header, and nothing else.
+# studio-engine, taken as a VIEW LIBRARY for the site footer, and nothing else.
 #
-# Rantly has no database, no accounts and no session (config/application.rb
-# disables the session store), so it cannot take the engine's auth, admin pages,
-# error logs or models: every one of them is ActiveRecord, and this app loads no
-# ActiveRecord. What it takes is the footer helper (`studio_site_footer`, the
-# engine's app/helpers/studio/site_footer_helper.rb), its partials and its
-# scoped inline CSS; and the page header (studio/_page_header) with the legal
-# page around it (studio/_legal_page), self-styled below. The engine's
-# docs/SITE_FOOTER.md and docs/PAGE_HEADER.md are the contracts.
+# Rantly has no accounts and no session (config/application.rb disables the
+# session store), and its database is a TOKEN: an empty SQLite file
+# (config/database.yml) that exists for the shared tooling and holds nothing.
+# What Rantly takes from the engine is the footer helper
+# (`studio_site_footer`, the engine's app/helpers/studio/site_footer_helper.rb),
+# its partials and its scoped inline CSS, and the not-found page. The engine's
+# docs/SITE_FOOTER.md is the contract.
 #
-# The engine handles an app with no database itself (studio-engine >= 0.86,
-# Studio.active_record?; its docs/SITE_FOOTER.md, "An app with no database"):
-# it keeps its ActiveRecord-bound code out of eager loading, skips its check
-# of the host's ::User (Rantly's is a fictional sample profile,
-# app/models/user.rb, not an account) and makes
-# `studio_engine:install:migrations` a no-op. The Gemfile floor is what holds
-# that. The one thing left to this app is ROUTES: config/routes.rb does NOT
-# call Studio.routes(self), so the engine draws nothing: no /login, /signup,
-# /admin, /error_logs, /_studio/*.
+# It takes none of the engine's database features (auth, admin pages, error
+# logs, theme settings, magic links, the local-review hop). Their migrations
+# are written for Postgres (`t.jsonb`, which SQLite does not have) and expect a
+# `users` table, so the token database cannot hold them:
+#   * config/routes.rb does NOT call Studio.routes(self), so the engine draws
+#     nothing: no /login, /signup, /admin, /error_logs, /_studio/*.
+#   * lib/tasks/token_database.rake makes `studio_engine:install:migrations`
+#     a no-op, so the hub's release sweep copies no engine migration in.
+#   * host_schema_check below is off, so boot does not demand the engine's
+#     error_logs, theme_settings and image_caches tables.
+# Rantly's ::User is a fictional sample profile (app/models/user.rb), not an
+# ActiveRecord model, so the engine skips its user-contract check by itself.
 #
-# Taking more of the engine (sign-in, admin, error logs) means taking a
-# database first; that is a separate decision, not this file's.
+# Taking more of the engine means moving to Postgres first: mcritchie-studio
+# docs/agents/modules/token-database.md, "Upgrade to Postgres".
 Studio.configure do |config|
+  # The token database holds none of the engine's tables, by design (above).
+  config.host_schema_check = false
+
   # The name and mark the engine's not-found page draws (Studio::ExceptionsApp,
   # config/application.rb; docs/NOT_FOUND_PAGE.md, "Where the words come from").
   # Rantly draws its own masthead, so the engine's navbar never reads these.
