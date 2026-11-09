@@ -38,8 +38,10 @@ class ProductionSslTest < ActiveSupport::TestCase
   # studio-engine is in the bundle as a view library only: the site footer and
   # the self-styled page header (config/initializers/studio.rb). Production eager-loads, which is where the
   # engine's ActiveRecord models and auth-bound controllers would break the boot
-  # if the engine did not keep them out of eager loading in an app with no
-  # ActiveRecord. Rantly does nothing to help it: this is the engine's promise.
+  # if they were eager loaded. Rantly loads ActiveRecord for its token database,
+  # so the engine no longer keeps them out by itself; Rantly's own initializer
+  # (config/application.rb, rantly.engine_footer_only_eager_load) does, and this
+  # pins it.
   test "production eager-loads with studio-engine and renders the site footer" do
     assert_equal true, self.class.results["eager_loaded"]
     assert self.class.results["https /"]["footer"], "the feed should end with the engine's site footer"

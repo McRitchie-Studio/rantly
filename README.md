@@ -8,8 +8,9 @@ Rails 4), built through McRitchie Studio's App Builder as a showcase. It keeps
 the name, the tagline ("Let it all out") and the founding joke; none of the old
 code was ported.
 
-It is a Rails 8.1 app with **no database** and no accounts, so it runs on one
-Heroku Eco dyno. Anyone can browse it without signing in. It takes
+It is a Rails 8.1 app with no accounts and **nothing stored**, so it runs on one
+Heroku Eco dyno with no add-on. Its only database is a *token* (see *The token
+database* below). Anyone can browse it without signing in. It takes
 [studio-engine](https://github.com/McRitchie-Studio/studio-engine) for one
 thing only: shared views, the site footer and the standard page header (see
 *Site footer* and *Page header* below).
@@ -63,19 +64,38 @@ declares the footer's facts (wordmark, logo, tagline, link columns, legal line)
 and the layout calls `studio_site_footer`. The engine's own contract is its
 `docs/SITE_FOOTER.md`.
 
-Rantly takes none of the rest of the engine, because all of it (sign-in, admin
-pages, error logs, theme settings) is ActiveRecord and Rantly has no database.
-The engine handles that itself from 0.86 (`Studio.active_record?`): it keeps
-its ActiveRecord-bound code out of eager loading, skips its check of the
-host's `User`, and makes `bin/rails studio_engine:install:migrations` a no-op
-that exits 0, which the hub's release sweep runs after every engine publish.
-The `Gemfile` floors the engine at `~> 0.86` for that reason. What is left to
-Rantly:
+Rantly takes none of the rest of the engine. Sign-in, admin pages, error logs,
+theme settings, magic links and the local-review hop all need the engine's
+tables, and its migrations are written for Postgres, so the token database
+cannot hold them. Because Rantly loads ActiveRecord, the engine would otherwise
+take it for a full consumer, so Rantly keeps it footer-only itself:
 
 | Where | What | Why |
 |-------|------|-----|
 | `config/routes.rb` | No `Studio.routes(self)` | The engine draws no routes: no `/login`, `/admin`, `/_studio/*` |
+| `config/application.rb` | `rantly.engine_footer_only_eager_load` | Production eager loads only the engine's helpers; its controllers need a sign-in Rantly does not have |
+| `lib/tasks/token_database.rake` | `studio_engine:install:migrations` is a no-op | The hub's release sweep runs it after every engine publish; the engine's migrations would not migrate on SQLite |
+| `config/initializers/studio.rb` | `host_schema_check = false` | Boot does not demand the engine's `error_logs`, `theme_settings` and `image_caches` tables |
 | `app/assets/stylesheets/application.css` | `--color-*` tokens mapped to Rantly's palette | The footer reads the engine's theme tokens; without them it falls back to violet |
+
+## The token database
+
+`config/database.yml` points every environment at a SQLite file under
+`storage/` (git-ignored), and `db/schema.rb` is empty. It holds nothing. It
+exists so the shared tooling finds the ActiveRecord app it expects: desk
+bringup (`bin/agent-worktree up`) runs `bin/rails db:prepare`, and the hub's
+pre-flight (`bin/fast-check`) boots the app at `RAILS_ENV=test` to prove the
+desk has its own test database. `test/integration/token_database_test.rb` pins
+both.
+
+- **`url:`, not `database:`.** A desk exports `DATABASE_URL` at a Postgres
+  database. Rails merges that over a `database:` entry but leaves an entry with
+  its own `url:` alone, so each desk keeps its own SQLite files.
+- **Production.** No add-on and no release phase. The file would sit on the
+  dyno's ephemeral disk and be lost on each restart; that is acceptable only
+  because nothing is stored. Today nothing even opens it.
+- **Storing something real** means moving to Postgres first: hub
+  `docs/agents/modules/token-database.md`, "Upgrade to Postgres".
 
 ## Page header
 
@@ -110,7 +130,7 @@ another origin.
 
 | The policy says | Because |
 |-----------------|---------|
-| No accounts, no sign-in, no passwords | No auth anywhere; no database (`config/application.rb` loads no ActiveRecord) |
+| No accounts, no sign-in, no passwords | No auth anywhere; the token database is empty (`db/schema.rb`) and nothing writes to it |
 | Nothing typed in the rant box is sent or saved | `app/javascript/composer.js` makes no request; `app/views/shared/_composer.html.erb` is not a form |
 | Commenting is off | No comment form; comments are sample data in `data/sample.yml` |
 | No cookies, no browser storage | `config.session_store :disabled` (`config/application.rb`); no `localStorage` or cookie code in `app/` |
@@ -125,6 +145,7 @@ another origin.
 
 ```bash
 bundle install
+bin/rails db:prepare         # the token database: empty SQLite files under storage/
 bin/rails server             # http://localhost:3000
 bin/rails test               # unit + component + the production https probe
 bin/rails test:system        # browsing and the demo composer in headless Chrome
@@ -152,7 +173,8 @@ the release promotes `accepted` to `release`, and production ships `release` to
 
 ### The static build (Cloudflare)
 
-Rantly has no database and only GET routes, so it can be served as plain files.
+Rantly stores nothing (its token database is empty) and has only GET routes, so
+it can be served as plain files.
 `bin/static-build` precompiles the digested assets in production mode, renders
 every page into `tmp/static/site` (`bin/rails static:build`, `lib/static_site.rb`)
 and writes `tmp/static/site.manifest.json` beside it. It renders through the real

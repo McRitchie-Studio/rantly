@@ -1,4 +1,4 @@
-# Rantly's sample world. There is no database: every user, rant, follow and
+# Rantly's sample world. Nothing is in a database: every user, rant, follow and
 # comment the app shows lives in this file, and SampleData loads it once at
 # boot. Everyone here is fictional.
 #

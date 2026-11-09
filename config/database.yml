@@ -1,0 +1,41 @@
+# THE TOKEN DATABASE. Rantly keeps nothing: its pages read data/sample.yml.
+# This SQLite file exists so the shared tooling finds the ActiveRecord app it
+# expects (desk bringup runs db:prepare; the pre-flight's test-database guard
+# boots the app and reads the database it connects to). The schema is empty
+# (db/schema.rb). The hub's recipe and the upgrade path to Postgres:
+# mcritchie-studio docs/agents/modules/token-database.md.
+#
+# WHY `url:` AND NOT `database:`. A desk exports DATABASE_URL at a Postgres
+# database (bin/agent-worktree), and Rails merges DATABASE_URL over a
+# `database:` entry, which would turn this into a Postgres config with no pg
+# gem. An entry that carries its own `url:` is left alone. The relative path
+# resolves under the app root, so each desk keeps its own files.
+#
+# WHY `adapter:` AND `database:` AS WELL. The hub reads this file without
+# booting the app (mcritchie-studio app/models/release/gate_workspace.rb): the
+# adapter tells the release gate not to hand the app a Postgres URL, and
+# `test.database` is the name the pre-flight's guard compares against. They
+# must name the same file as `url:`, which wins when Rails merges them.
+#
+# PRODUCTION on Heroku: the file sits on the dyno's ephemeral disk and is lost
+# on every restart. That is acceptable only because the token database holds
+# nothing. Storing anything real means moving to Postgres first.
+default: &default
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: storage/development.sqlite3
+  url: sqlite3:storage/development.sqlite3
+
+test:
+  <<: *default
+  database: storage/test.sqlite3
+  url: sqlite3:storage/test.sqlite3
+
+production:
+  <<: *default
+  database: storage/production.sqlite3
+  url: sqlite3:storage/production.sqlite3

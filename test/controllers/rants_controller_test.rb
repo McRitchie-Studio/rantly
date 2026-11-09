@@ -2,7 +2,7 @@ require "test_helper"
 
 # Component tier: the feed and a single rant as rendered HTML.
 class RantsControllerTest < ActionDispatch::IntegrationTest
-  test "/up answers 200 with no database" do
+  test "/up answers 200 without touching the token database" do
     get rails_health_check_path
     assert_response :success
   end

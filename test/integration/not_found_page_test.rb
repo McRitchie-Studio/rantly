@@ -9,8 +9,8 @@ require "test_helper"
 #
 # config.exceptions_app is guarded on Studio::ExceptionsApp (engine 0.135.0), so
 # these read whichever engine is locked: the engine page inside Rantly's layout,
-# or the branded public/404.html (same words, same data-test hooks). Rantly has
-# no database; the engine page renders without one. The test env hides
+# or the branded public/404.html (same words, same data-test hooks). Rantly's
+# token database is empty; the engine page renders without reading it. The test env hides
 # exceptions, so each request runs with production's exception settings.
 class NotFoundPageTest < ActionDispatch::IntegrationTest
   APP_NAME = "Rantly"

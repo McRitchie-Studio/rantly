@@ -28,3 +28,7 @@
 
 /.worktrees/
 .DS_Store
+
+# The token database's SQLite files (config/database.yml); keep the directory.
+/storage/*
+!/storage/.keep
