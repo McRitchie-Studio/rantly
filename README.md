@@ -145,6 +145,7 @@ another origin.
 
 ```bash
 bundle install
+bin/rails db:prepare         # the token database: empty SQLite files under storage/
 bin/rails server             # http://localhost:3000
 bin/rails test               # unit + component + the production https probe
 bin/rails test:system        # browsing and the demo composer in headless Chrome

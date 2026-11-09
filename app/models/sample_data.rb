@@ -1,6 +1,6 @@
 require "yaml"
 
-# Rantly has no database. Every user, rant, follow and comment lives in one
+# Rantly stores nothing in a database (its token database is empty). Every user, rant, follow and comment lives in one
 # checked-in YAML file (data/sample.yml), loaded once per process and frozen.
 # The models (User, Rant, Comment) are plain value objects that ask this class
 # for their relations.
