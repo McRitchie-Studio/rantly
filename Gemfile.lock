@@ -387,7 +387,7 @@ GEM
     sqlite3 (2.10.2-x86_64-darwin)
     sqlite3 (2.10.2-x86_64-linux-gnu)
     sqlite3 (2.10.2-x86_64-linux-musl)
-    studio-engine (0.143.0)
+    studio-engine (0.143.1)
       aws-sdk-s3 (~> 1.218)
       csv (>= 3.0)
       faker (>= 2.0, < 4.0)
@@ -607,7 +607,7 @@ CHECKSUMS
   sqlite3 (2.10.2-x86_64-darwin) sha256=fd2c67b49d313031af112e172c83ab321681a2b4996bf882eefac50be7bea08f
   sqlite3 (2.10.2-x86_64-linux-gnu) sha256=ca92731ab464df9cae503fa1a439a549e2724f6953c8c05a7769b59366e38f15
   sqlite3 (2.10.2-x86_64-linux-musl) sha256=b9f8fc62f3e0eb8966b41de251b492b4c8e9d1b23559beb6e150ad7f8d590941
-  studio-engine (0.143.0) sha256=e51efeb45cc335bc91d48afeace20445e1ad49d3592cf07439ba52de0188cbc2
+  studio-engine (0.143.1) sha256=75a58ab2993c148a6b33eb5ef2ce58caab6f810c4bbf3bab3eb002d667ad233b
   tailwindcss-rails (4.6.0) sha256=d99512867173d55c5ef8890427682299d8539f550cec1408b3d8667a538bd365
   tailwindcss-ruby (4.3.3) sha256=ee0a64030749862deb501acab4c4aaf5adbee13865746a33299d46d7b5d0952a
   tailwindcss-ruby (4.3.3-aarch64-linux-gnu) sha256=c86d6dd3eccc85fe0d792a832b06f2bf3c0a7a83b399308aeb9d8f5725f42a6a
